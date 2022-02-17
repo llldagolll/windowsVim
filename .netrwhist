@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =9
+let g:netrw_dirhist_9='C:/Users/owner/prog/rust/branches/src'
+let g:netrw_dirhist_8='C:\Users\owner\prog\rust\branches'
+let g:netrw_dirhist_7='C:/Users/owner/prog/rust/branches/src'
+let g:netrw_dirhist_6='C:\Users\owner\prog\rust\branches'
+let g:netrw_dirhist_5='C:/Users/owner/prog/rust/branches/src'
+let g:netrw_dirhist_4='C:\Users\owner\prog\rust\branches'
+let g:netrw_dirhist_3='C:/Users/owner/vimfiles/plugged/vim-quickrun/autoload'
+let g:netrw_dirhist_2='C:/Users/owner/vimfiles/plugged/vim-quickrun'
+let g:netrw_dirhist_1='C:/Users/owner/vimfiles/plugged'
+let g:netrw_dirhist_0='C:\Users\owner\vimfiles\plugged\vim-quickrun'
