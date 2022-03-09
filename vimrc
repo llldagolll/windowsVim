@@ -1,5 +1,6 @@
 " python path
 set pythonthreedll=C:\Users\owner\AppData\Local\Programs\Python\Python38\python38.dll
+set ambiwidth=double
 " 文字コードをUTF-8
 set encoding=UTF-8
 " バック?の挙動を通常と同じにする
@@ -29,19 +30,21 @@ nnoremap <C-k><C-k> <C-w>k
 " enable termguicolor
 set termguicolors
 set expandtab
-set tabstop=4 "画面上でタブ文字が占める幅
+set tabstop=2 "画面上でタブ文字が占める幅
 set shiftwidth=2 "自動インデントでずれる幅
-set softtabstop=4 "連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
+" set softtabstop=4 "連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
 "set autoindent "改行時に前の行のインデントを継続する
 set smartindent "改行時に入力された行の末尾に合わせて次の行のインデントを増減する
 "ディレクトリツリーを表示
-map <C-a> :NERDTreeToggle<CR>
+map <C-n> :NERDTreeToggle<CR>
 " 文字コードをUTF-8
 set encoding=UTF-8
 " バック?の挙動を通常と同じにする
 set backspace=2
 set nobackup
 set noswapfile
+set noundofile
+
 " 編集中のファイルが変更されたら自動で読み直す
 " set autoread
 " 入力中のコマンドをステータスに表示にする
@@ -95,6 +98,11 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nnoremap <F3> :noh<CR>
 ""他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif"
+let g:NERDTreeShowBookmarks=1
+if !argc()
+      autocmd vimenter * NERDTree|normal gg3j
+endif
+
 nnoremap <silent><F4> :only<CR>
 nnoremap <silent><F5> :QuickRun<CR>
 nnoremap <silent><leader>r :QuickRun<CR>
@@ -131,7 +139,7 @@ Plug 'junegunn/vim-easy-align'
 " Any valid git URL is allowed
 Plug 'https://github.com/junegunn/vim-github-dashboard.git'
 " Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+" Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
@@ -156,7 +164,8 @@ Plug 'prabirshrestha/asyncomplete-lsp.vim'
 Plug 'thinca/vim-quickrun'
 
 " colorscheme
-Plug 'arcticicestudio/nord-vim'
+" Plug 'arcticicestudio/nord-vim'
+Plug 'cocopon/iceberg.vim'
 
 " pairing
 Plug 'tpope/vim-surround'
@@ -174,7 +183,8 @@ Plug 'MetalPhaeton/easybracket-vim'
 " commentout 
 Plug 'tomtom/tcomment_vim'
 
-
+" For easy writing html
+Plug 'mattn/emmet-vim'
 
 
 syntax enable
@@ -183,7 +193,7 @@ filetype plugin indent on
 call plug#end()
 
 " カラースキームを設定
-colorscheme nord
+colorscheme iceberg
 
 " when you save the rust file, the code format
 let g:rustfmt_autosave = 1
