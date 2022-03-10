@@ -17,6 +17,7 @@ set wildmode=list:longest
 set modifiable
 set write
 set nowrap
+nmap <silent> <C-.>   :ImportSymbol<CR>
 "折り返し時に表示単位での移動ができるようにする
 nnoremap j gj
 nnoremap k gk
@@ -79,6 +80,21 @@ map <C-a> :NERDTreeToggle<CR>
 let NERDTreeQuitOnOpen=1
 inoremap <expr><S-CR> pumvisible() ? "<C-y>" : "<S-CR>"
 
+""" <Tab>で候補をナビゲート
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+
+""" <Tab>で次、<S+Tab>で前
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
 " カーソルモード
 if has('vim_starting')
     " 挿入モード時に非点滅の縦棒タイプのカーソル
@@ -94,6 +110,7 @@ function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
+" 補完表示時のenterで改行をしない
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 nnoremap <F3> :noh<CR>
 ""他のバッファをすべて閉じた時にNERDTreeが開いていたらNERDTreeも一緒に閉じる。
@@ -107,6 +124,8 @@ nnoremap <silent><F4> :only<CR>
 nnoremap <silent><F5> :QuickRun<CR>
 nnoremap <silent><leader>r :QuickRun<CR>
 nnoremap <Leader>q :<C-u>bw! \[quickrun\ output\]<CR>
+nnoremap <silent><leader>f :LspDocumentFormat<CR>
+nnoremap <silent><leader>e :LspDocumentDiagnostics<CR>
 cab t Template
 cab qr QuickRun
 cab cr !cargo run
@@ -185,6 +204,10 @@ Plug 'tomtom/tcomment_vim'
 
 " For easy writing html
 Plug 'mattn/emmet-vim'
+
+" auto import statement
+Plug 'wookayin/vim-autoimport'
+
 
 
 syntax enable
