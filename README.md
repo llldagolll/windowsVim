@@ -1,8 +1,8 @@
 # windowsVim
 バックアップ
 
-## wsl環境のubuntuでは以下の変更を推奨
-set t_Co=256
+## wsl環境のubuntuでは以下の記述を追加
+set t_Co=256  
 set bg=dark
 
 参考:
