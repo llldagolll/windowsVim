@@ -1,4 +1,5 @@
 {
   "coc.preferences.formatOnType": true,
-  "diagnostic.displayByAle": true
+  "diagnostic.displayByAle": true,
+  "jedi.executable.command": "jedi-language-server"
 }
