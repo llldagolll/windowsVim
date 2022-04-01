@@ -165,22 +165,29 @@ Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
 " Using a non-default branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 " Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
+" Plug 'fatih/vim-go', { 'tag': '*' }
 " Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+" Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " Unmanaged plugin (manually installed and updated)
 Plug '~/my-prototype-plugin'
 " lsp
-Plug 'prabirshrestha/vim-lsp'
-Plug 'mattn/vim-lsp-settings'
+" Plug 'prabirshrestha/vim-lsp'
+" Plug 'mattn/vim-lsp-settings'
 " auto-completion
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
+" Plug 'prabirshrestha/asyncomplete.vim'
+" Plug 'prabirshrestha/asyncomplete-lsp.vim'
 
 " quiru run the file
 Plug 'thinca/vim-quickrun'
+
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Or build from source code by using yarn: https://yarnpkg.com
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
+
 
 " colorscheme
 " Plug 'arcticicestudio/nord-vim'
@@ -193,13 +200,13 @@ Plug 'tpope/vim-surround'
 Plug 'mattn/vim-sonictemplate'
 
 " rust format
-Plug 'rust-lang/rust.vim'
+" Plug 'rust-lang/rust.vim'
 
 " 括弧補完
-Plug 'MetalPhaeton/easybracket-vim'
- 
+" Plug 'MetalPhaeton/easybracket-vim'
 
-" commentout 
+
+" commentout
 Plug 'tomtom/tcomment_vim'
 
 " For easy writing html
@@ -208,6 +215,18 @@ Plug 'mattn/emmet-vim'
 " auto import statement
 Plug 'wookayin/vim-autoimport'
 
+" snipetts
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
+" lint
+Plug 'dense-analysis/ale'
+
+" statusline
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
 
 
 syntax enable
@@ -231,3 +250,81 @@ let g:quickrun_config = {
 \},
 \}
 
+" enable emmet-vim on tsx file
+autocmd FileType html,css,typescriptreact EmmetInstall
+let g:user_emmet_leader_key='<C-x>'
+
+let g:sonictemplate_vim_template_dir = [
+      \ '~/vimfiles/template'
+      \]
+
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+let b:coc_diagnostic_disable=1
+set statusline^=%{coc#status()}
+
+ let g:quickrun_config['typescript'] = { 'type' : 'typescript/tsc' }
+ let g:quickrun_config['typescript/tsc'] = {
+ \   'command': 'tsc',
+ \   'exec': ['%c --target esnext --module commonjs %o %s', 'node %s:r.js'],
+ \   'tempfile': '%{tempname()}.ts',
+ \   'hook/sweep/files': ['%S:p:r.js'],
+ \ }
+
+" 保存時のみ実行する
+let g:ale_fix_on_save = 1
+let g:ale_disable_lsp = 1
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+let b:ale_fixers = {
+\  '*':['remove_trailing_lines', 'trim_whitespace'],
+\  'javascript': ['eslint'],
+\  'typescript': ['eslint'],
+\  'python': ['autopep8', 'yapf'],
+\  }
+
+let b:ale_warn_about_trailing_whitespace = 0
+
+" 表示に関する設定
+let g:ale_sign_error = ''
+let g:ale_sign_warning = ''
+let g:airline#extensions#ale#open_lnum_symbol = '('
+let g:airline#extensions#ale#close_lnum_symbol = ')'
+let g:ale_echo_msg_format = '[%linter%]%code: %%s'
+highlight link ALEErrorSign Tag
+highlight link ALEWarningSign StorageClass
+
+augroup FiletypeGroup
+    autocmd!
+    au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+augroup END
+let g:ale_linter_aliases = {'jsx': ['css', 'javascript']}
+let g:ale_linters = {
+\  'jsx': ['eslint'],
+\ 'python':['flake8'],
+\  }
+
+let g:ale_python_flake8_options = '-m flake8'
+let g:ale_python_autopep8_options = '-m autopep8'
+let g:ale_python_black_options = '-m black'
+
+
+
+" Ctrl + kで次の指摘へ、Ctrl + jで前の指摘へ移動
+nmap <silent> <C-k> <Plug>(ale_previous_wrap)
+nmap <silent> <C-j> <Plug>(ale_next_wrap)
+
+let g:airline_theme = 'angr'
+set laststatus=2
+let g:airline#extensions#branch#enabled = 1
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#wordcount#enabled = 0
+let g:airline#extensions#default#layout = [['a', 'b', 'c'], ['x', 'y', 'z']]
+let g:airline_section_c = '%t'
+let g:airline_section_x = '%{&filetype}'
+let g:airline_section_z = '%3l:%2v %{airline#extensions#ale#get_warning()} %{airline#extensions#ale#get_error()}'
+let g:airline#extensions#ale#error_symbol = ' '
+let g:airline#extensions#ale#warning_symbol = ' '
+let g:airline#extensions#default#section_truncate_width = {}
+let g:airline#extensions#whitespace#enabled = 1
