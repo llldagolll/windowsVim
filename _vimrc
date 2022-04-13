@@ -1,12 +1,30 @@
 " python path
 set pythonthreedll=C:\Users\owner\AppData\Local\Programs\Python\Python38\python38.dll
+" qfixappにruntimepathを通す(パスは環境に合わせてください)
+set runtimepath+=C:\Users\owner\qfixapp
+let QFixHowm_Key = 'g'
+" howm_dirはファイルを保存したいディレクトリを設定
+let howm_dir             = 'c:\Users\owner\howm'
+let howm_filename        = '%Y/%m/%Y-%m-%d-%H%M%S.txt'
+let howm_fileencoding    = 'cp932'
+let howm_fileformat      = 'dos'
+" キーコードやマッピングされたキー列が完了するのを待つ時間(ミリ秒)
+set timeout timeoutlen=3000 ttimeoutlen=100
+" プレビューや絞り込みをQuickFix/ロケーションリストの両方で有効化(デフォルト:2)
+let QFixWin_EnableMode = 1
+" QFixHowmのファイルタイプ
+let QFixHowm_FileType = 'markdown'
+" タイトル記号を # に変更する
+let QFixHowm_Title = '#'
+" QuickFixウィンドウでもプレビューや絞り込みを有効化
+let QFixWin_EnableMode = 1
+" QFixHowm/QFixGrepの結果表示にロケーションリストを使用する/しない
+let QFix_UseLocationList = 1
+" キーコードやマッピングされたキー列が完了するのを待つ時間(ミリ秒)
+set timeout timeoutlen=3000 ttimeoutlen=100
 set ambiwidth=double
 " 文字コードをUTF-8
 set encoding=UTF-8
-" バック?の挙動を通常と同じにする
-set nobackup
-set noswapfile
-set backspace=2
 " 編集中のファイルが変更されたら自動で読み直す
 " set autoread
 " 入力中のコマンドをステータスに表示にする
@@ -32,9 +50,12 @@ nnoremap <C-k><C-k> <C-w>k
 set termguicolors
 set expandtab
 set tabstop=2 "画面上でタブ文字が占める幅
+set smarttab
 set shiftwidth=2 "自動インデントでずれる幅
+set list
+set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
 " set softtabstop=4 "連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
-"set autoindent "改行時に前の行のインデントを継続する
+set autoindent "改行時に前の行のインデントを継続する
 set smartindent "改行時に入力された行の末尾に合わせて次の行のインデントを増減する
 "ディレクトリツリーを表示
 map <C-n> :NERDTreeToggle<CR>
@@ -68,12 +89,6 @@ nnoremap <C-j><C-j> <C-w>j
 nnoremap <C-k><C-k> <C-w>k
 " enable termguicolor
 set termguicolors
-set expandtab
-"set tabstop=4 "画面上でタブ文字が占める幅
-set shiftwidth=2 "自動インデントでずれる幅
-set softtabstop=4 "連続した空白に対してタブキーやバックスペースキーでカーソルが動く幅
-set autoindent "改行時に前の行のインデントを継続する
-set smartindent "改行時に入力された行の末尾に合わせて次の行のインデントを増減する
 "ディレクトリツリーを表示
 map <C-a> :NERDTreeToggle<CR>
 "NERDTreeファイル移動時自動で閉じる
@@ -92,8 +107,8 @@ inoremap <silent><expr> <Tab>
       \ coc#refresh()
 
 """ <Tab>で次、<S+Tab>で前
-inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <expr><Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr><S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 " カーソルモード
 if has('vim_starting')
@@ -216,6 +231,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ryanoasis/vim-devicons'
 
+" todo manager
+Plug 'davidoc/taskpaper.vim'
 
 syntax enable
 filetype plugin indent on
@@ -226,7 +243,7 @@ call plug#end()
 colorscheme iceberg
 
 " when you save the rust file, the code format
-let g:rustfmt_autosave = 1
+" let g:rustfmt_autosave = 1
 
 " quickrun実行時、バッファに自動でカーソル移動
 let g:quickrun_config = {
@@ -265,10 +282,18 @@ let g:ale_disable_lsp = 1
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_lint_on_insert_leave = 0
 let g:ale_lint_on_enter = 0
-let b:ale_fixers = {
+" let b:ale_fixers = {
+" \  '*':['remove_trailing_lines', 'trim_whitespace'],
+" \  'javascript': ['eslint'],
+" \  'typescript': ['eslint'],
+" \  'python': ['autopep8', 'yapf'],
+" \  }
+let g:ale_fixers = {
 \  '*':['remove_trailing_lines', 'trim_whitespace'],
 \  'javascript': ['eslint'],
+\  'javascriptreact': ['eslint'],
 \  'typescript': ['eslint'],
+\  'typescriptreact': ['eslint'],
 \  'python': ['autopep8', 'yapf'],
 \  }
 
@@ -286,10 +311,12 @@ highlight link ALEWarningSign StorageClass
 augroup FiletypeGroup
     autocmd!
     au BufNewFile,BufRead *.jsx set filetype=javascript.jsx
+    au BufNewFile,BufRead *.tsx set filetype=javascript.tsx
 augroup END
-let g:ale_linter_aliases = {'jsx': ['css', 'javascript']}
+let g:ale_linter_aliases = {'jsx': ['css', 'javascript'], 'tsx':['typescript']}
 let g:ale_linters = {
 \  'jsx': ['eslint'],
+\  'tsx': ['eslint'],
 \ 'python':['flake8'],
 \  }
 
@@ -316,3 +343,21 @@ let g:airline#extensions#ale#error_symbol = ' '
 let g:airline#extensions#ale#warning_symbol = ' '
 let g:airline#extensions#default#section_truncate_width = {}
 let g:airline#extensions#whitespace#enabled = 1
+
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
+" Use <leader>x for convert visual selected code to snippet
+xmap <leader>x  <Plug>(coc-convert-snippet)
