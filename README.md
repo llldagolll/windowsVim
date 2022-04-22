@@ -11,5 +11,4 @@ https://genuine-lamps.com/ja/linux/3831-changing-terminal-colors-in-ubuntu-linux
 ## python
 pip install autopep8 flake8 yapf
 
-## javascript
-npm i -g eslint
+## nodejsの環境構築
